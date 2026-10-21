@@ -73,4 +73,5 @@ This tool is intended solely for theoretical analysis, research support and para
 
 ## Acknowledgements
 
-Developed by Z Lab. The source package identifies the application as © 2026 PhD Hong. All rights reserved. Confirm that you have the right to redistribute the included dataset and application materials before making this repository public.
+Developed by Z Lab. The source package identifies the application as © 2026 PhD Hong. All rights reserved. The repository owner is responsible for confirming redistribution rights for the included dataset and application materials.
+
