@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1f78d1">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" href="/app-icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/app-icon-180.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>FRP Bar–Concrete Bond Strength Prediction Platform</title>
+<style>
+:root{
+  --bg:#f3f5f8;--panel:#fff;--ink:#172230;--muted:#758295;--line:#dde4ec;
+  --navy:#183a56;--blue:#2f6f9e;--teal:#2f8c91;--green:#26795d;--amber:#ad741d;--red:#b84b4b;
+  --shadow:0 16px 42px rgba(25,48,70,.075);--r:20px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;color:var(--ink);
+  font-family:Inter,"SF Pro Display","SF Pro Text","Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  background:
+    radial-gradient(circle at 8% -5%,rgba(101,153,194,.12),transparent 34rem),
+    radial-gradient(circle at 96% 4%,rgba(90,167,163,.08),transparent 30rem),
+    var(--bg);
+}
+button,input,select{font:inherit}
+.wrap{max-width:1540px;margin:auto;padding:18px 20px 42px}
+.top{
+  display:flex;justify-content:space-between;align-items:center;gap:18px;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(18px);
+  border:1px solid rgba(215,224,234,.9);border-radius:24px;padding:14px 16px;
+  box-shadow:0 14px 38px rgba(28,54,78,.08);
+}
+.brand{display:flex;gap:13px;align-items:center;min-width:0}
+.appicon{
+  width:48px;height:48px;border-radius:14px;position:relative;overflow:hidden;flex:0 0 auto;
+  background:linear-gradient(145deg,#f8fcff 0%,#d8eaf4 42%,#9cc6d8 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(31,87,115,.12),0 7px 18px rgba(36,80,108,.15);
+}
+.appicon:before{
+  content:"";position:absolute;inset:5px 7px 25px 7px;border-radius:10px;
+  background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.15));
+  filter:blur(.2px);opacity:.78;
+}
+.appicon svg{position:absolute;inset:0;width:100%;height:100%}
+.appicon-img{width:48px;height:48px;border-radius:14px;object-fit:cover;box-shadow:0 7px 18px rgba(36,80,108,.15);flex:0 0 auto}.brand h1{margin:0;font-size:19px;letter-spacing:.1px;font-weight:780}
+.brand p{margin:4px 0 0;font-size:11px;color:var(--muted)}
+.topright{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.pill{
+  font-size:10.5px;border-radius:999px;padding:7px 10px;color:#31536c;
+  background:#f5f8fb;border:1px solid #dfe8ef;white-space:nowrap
+}
+.linkbtn{
+  border:1px solid #d7e1e9;background:#fff;color:#2d5d7e;border-radius:11px;
+  padding:8px 11px;text-decoration:none;font-size:10.5px;font-weight:700
+}
+.grid{
+  display:grid;grid-template-columns:minmax(0,1.17fr) minmax(430px,.83fr);
+  gap:16px;margin-top:16px;align-items:start
+}
+.stack{display:grid;gap:16px}
+.card{
+  background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow:hidden
+}
+.head{padding:17px 18px 11px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ttl{display:flex;gap:10px;align-items:flex-start}
+.step{
+  width:31px;height:31px;border-radius:10px;background:linear-gradient(145deg,#edf5fb,#dbeaf4);
+  color:var(--blue);display:grid;place-items:center;font-weight:820;font-size:12px;flex:0 0 auto;
+  box-shadow:inset 0 1px 0 #fff
+}
+.head h2{margin:1px 0 4px;font-size:16px}
+.sub{margin:0;color:var(--muted);font-size:10.8px;line-height:1.55}
+.body{padding:5px 18px 18px}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.field{
+  border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#fbfcfd,#f8fafc);
+  padding:11px
+}
+.field label{display:flex;justify-content:space-between;gap:8px;font-size:11.3px;font-weight:760;margin-bottom:7px}
+.field label em{font-style:normal;color:var(--muted);font-size:9.2px;font-weight:600}
+.row{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center}
+.row input,.field select{
+  width:100%;border:1px solid #cfd9e3;background:#fff;border-radius:10px;padding:9px 10px;
+  outline:none;color:var(--ink);transition:.15s
+}
+.row input:focus,.field select:focus{border-color:#8ab2ce;box-shadow:0 0 0 3px rgba(47,111,158,.08)}
+.unit{font-size:10px;color:var(--muted);min-width:31px;text-align:right}
+.range{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:9.3px;margin-top:6px}
+.ok{color:var(--green);font-weight:760}.warn{color:var(--amber);font-weight:760}
+.minirow{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.mini{border:1px solid var(--line);background:#fff;color:var(--blue);border-radius:9px;padding:5px 8px;font-size:9.3px;cursor:pointer}
+.mini:hover{background:#f3f8fb}
+.derived{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:10px}
+.metric{border:1px solid var(--line);border-radius:12px;padding:9px;background:#fff}
+.metric .k{font-size:8.8px;color:var(--muted)}
+.metric .v{font-size:13px;font-weight:830;color:var(--navy);margin-top:3px}
+.metric .n{font-size:8.2px;color:var(--muted);margin-top:2px}
+.preview{
+  margin-top:12px;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  background:linear-gradient(180deg,#f9fbfc 0%,#ffffff 65%);
+}
+.previewtop{display:flex;justify-content:space-between;gap:10px;padding:11px 12px 0}
+.previewtop b{font-size:11px}.previewtop span{font-size:9.3px;color:var(--muted)}
+#frpSvg{display:block;width:100%;height:264px}
+.previewnote{
+  display:flex;gap:13px;flex-wrap:wrap;padding:0 12px 11px;color:var(--muted);font-size:8.8px;
+  border-top:1px solid #eef2f5;padding-top:8px
+}
+.previewnote b{color:#445a6c}
+.features{border-top:1px dashed var(--line);margin-top:11px;padding-top:10px}
+.featuretitle{font-size:10px;font-weight:800;color:var(--navy);letter-spacing:.3px;margin-bottom:7px}
+.featuregrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.chip{border:1px solid #cbe2da;background:#f8fcfb;border-radius:10px;padding:7px}
+.chip.bad{border-color:#efd8ad;background:#fffaf2}
+.chip span{display:block;color:var(--muted);font-size:8.3px}
+.chip b{display:block;font-size:10.3px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.models{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.model{
+  position:relative;text-align:left;border:1px solid var(--line);background:#fff;border-radius:13px;
+  padding:11px 9px;min-height:82px;cursor:pointer;transition:.15s
+}
+.model:hover{transform:translateY(-1px);border-color:#b9ccdb}
+.model.active{border:1.5px solid var(--blue);background:#f3f8fb;box-shadow:0 0 0 3px rgba(47,111,158,.055)}
+.model b{font-size:11px}.model small{display:block;color:var(--muted);font-size:8.6px;line-height:1.42;margin-top:4px}
+.best{position:absolute;right:5px;top:5px;background:#e1f3ec;color:#167357;border-radius:999px;padding:2px 5px;font-size:7.3px;font-weight:800}
+.modelinfo{
+  margin-top:10px;border:1px solid var(--line);background:#fafbfd;border-radius:12px;
+  padding:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px
+}
+.modelinfo div span{display:block;font-size:8.3px;color:var(--muted)}
+.modelinfo div b{font-size:11px}
+.domain-summary{
+  display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+  border:1px solid #dce5ec;background:linear-gradient(145deg,#fbfcfd,#f5f8fa);
+  border-radius:14px;padding:12px;margin-bottom:10px
+}
+.domain-summary .lead{font-size:11px;font-weight:800;color:#2d465a}
+.domain-summary .desc{font-size:8.8px;color:var(--muted);margin-top:3px}
+.domain-count{
+  min-width:82px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px
+}
+.domain-count b{display:block;font-size:20px;color:var(--green);line-height:1}
+.domain-count span{display:block;font-size:8px;color:var(--muted);margin-top:4px}
+.domain-row{display:grid;grid-template-columns:56px 1fr 70px;gap:8px;align-items:center;margin-top:9px}
+.domain-row .name{font-size:9px;font-weight:750;color:#4e6273}
+.track{
+  height:7px;border-radius:999px;background:#e9eef3;position:relative;overflow:visible
+}
+.track:before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:999px;
+  background:linear-gradient(90deg,#dbe7ef,#dfeee9)
+}
+.dotpos{
+  position:absolute;top:50%;width:12px;height:12px;border-radius:50%;
+  transform:translate(-50%,-50%);background:#fff;border:3px solid var(--blue);
+  box-shadow:0 2px 7px rgba(38,82,111,.18)
+}
+.domain-row .val{text-align:right;font-size:8.8px;color:var(--muted)}
+.domain-foot{
+  margin-top:11px;padding-top:10px;border-top:1px dashed var(--line);
+  display:grid;grid-template-columns:1fr 1fr;gap:7px
+}
+.domain-foot .miniinfo{border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px}
+.domain-foot span{display:block;font-size:8px;color:var(--muted)}
+.domain-foot b{display:block;font-size:10.5px;margin-top:2px}
+.resultbox{
+  background:linear-gradient(145deg,#183b58,#1f5a7a 60%,#26757a);
+  border-radius:17px;color:white;padding:19px;position:relative;overflow:hidden
+}
+.resultbox:after{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:-95px;top:-110px;background:rgba(255,255,255,.055)}
+.reshead{display:flex;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.reslabel{font-size:10.8px;color:#c7d9e5}
+.big{font-size:39px;font-weight:850;letter-spacing:-1px;margin-top:7px}.big span{font-size:14px;color:#c9dce6;font-weight:650;margin-left:4px}
+.modepill{font-size:9.2px;border:1px solid rgba(255,255,255,.19);background:rgba(255,255,255,.08);border-radius:999px;padding:5px 8px;height:max-content}
+.resmeta{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:15px;position:relative;z-index:1}
+.resmeta div{background:rgba(255,255,255,.08);border-radius:10px;padding:8px}
+.resmeta span{display:block;color:#c3d6e2;font-size:7.8px}.resmeta b{font-size:10px}
+.run{
+  width:100%;border:0;border-radius:12px;background:linear-gradient(90deg,#2d72a0,#2d9697);
+  color:white;padding:12px;font-weight:800;margin-top:11px;cursor:pointer;box-shadow:0 8px 18px rgba(23,106,154,.16)
+}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.secondary{border:1px solid var(--line);background:white;color:var(--navy);border-radius:10px;padding:9px;font-size:10px;font-weight:700;cursor:pointer}
+.alert{
+  display:none;margin-top:9px;border:1px solid #efd8ad;border-radius:10px;padding:9px 10px;
+  background:#fffaf2;color:#8a641f;font-size:9.4px;line-height:1.5
+}
+.notice{
+  margin-top:16px;border:1px solid #dce4ec;background:#f8fafc;border-radius:14px;padding:12px 14px;
+  color:#6f7d90;font-size:9.8px;line-height:1.58
+}
+.notice b{color:#34475b}
+.footer{
+  display:flex;justify-content:space-between;gap:12px;align-items:center;
+  color:#8b97a7;font-size:8.8px;margin-top:13px;padding:0 4px
+}
+.footer strong{color:#667688;font-weight:700}
+.error{color:#ffd49b}.loader{opacity:.62;pointer-events:none}
+@media(max-width:1100px){.grid{grid-template-columns:1fr}.models{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <img class="appicon-img" src="/app-icon-192.png" alt="Application icon"><div><h1>FRP Bar–Concrete Bond Strength Prediction Platform</h1>
+      <p>Parametric rib geometry · 13 input features · Local machine-learning prediction</p>
+    </div>
+  </div>
+  <div class="topright">
+    <span class="pill">Local offline</span>
+    <span class="pill">13 inputs · 9 models</span>
+    <a class="linkbtn" href="/mobile">Mobile</a>
+  </div>
+</header>
+
+<main class="grid">
+<section class="stack">
+  <article class="card">
+    <div class="head"><div class="ttl"><div class="step">01</div><div><h2>Concrete and Specimen Parameters</h2><p class="sub">Enter directly measurable parameters; the normalised geometric features required by the models are calculated simultaneously.</p></div></div></div>
+    <div class="body"><div class="form">
+      <div class="field"><label><span>Concrete compressive strength f<sub>c</sub></span><em>Input feature</em></label><div class="row"><input id="fc" type="number" value="35.3" step="0.1"><span class="unit">MPa</span></div><div class="range"><span>Database range: 23.3–67.1</span><span id="fcS" class="ok">Within range</span></div></div>
+      <div class="field"><label><span>Concrete cover c</span><em>Used to calculate c/d</em></label><div class="row"><input id="cover" type="number" value="69" step="0.5"><span class="unit">mm</span></div><div class="range"><span>Database range: c/d = 1.25–13.13</span><span id="cdS" class="ok">Within range</span></div></div>
+      <div class="field"><label><span>Bonded length l<sub>b</sub></span><em>Used to calculate l<sub>b</sub>/d</em></label><div class="row"><input id="lb" type="number" value="60" step="0.5"><span class="unit">mm</span></div><div class="minirow"><button class="mini" data-lbd="4">4d</button><button class="mini" data-lbd="5">5d</button><button class="mini" data-lbd="6">6d</button><button class="mini" data-lbd="7">7d</button></div><div class="range"><span>Database range: l<sub>b</sub>/d = 4.0–7.0</span><span id="lbdS" class="ok">Within range</span></div></div>
+      <div class="field"><label><span>Macroscopic Geometric Features</span><em>No manual input</em></label><div class="derived" style="grid-template-columns:1fr 1fr;margin:0"><div class="metric"><div class="k">c/d</div><div class="v" id="cd">5.750</div><div class="n">Normalised cover</div></div><div class="metric"><div class="k">l<sub>b</sub>/d</div><div class="v" id="lbd">5.000</div><div class="n">Normalised bonded length</div></div></div></div>
+    </div></div>
+  </article>
+
+  <article class="card">
+    <div class="head"><div class="ttl"><div class="step">02</div><div><h2>FRP Bar Material and Surface Geometry</h2><p class="sub">Material type, surface configuration and rib geometry jointly update the parametric preview and the 13-feature vector.</p></div></div></div>
+    <div class="body">
+      <div class="form">
+        <div class="field"><label><span>FRP bar type</span><em>Type</em></label><select id="type"><option value="1">CFRP · Carbon-fibre-reinforced polymer bar</option><option value="2" selected>GFRP · Glass-fibre-reinforced polymer bar</option><option value="3">BFRP · Basalt-fibre-reinforced polymer bar</option></select><div class="range"><span>Numerical labels: 1 / 2 / 3</span><span class="ok">Categorical variable</span></div></div>
+        <div class="field"><label><span>Surface configuration</span><em>Surface</em></label><select id="surface"><option value="1">HW · Helically wound</option><option value="2" selected>Rb · Ribbed</option><option value="3">In · Indented</option></select><div class="range"><span>Numerical labels: 1 / 2 / 3</span><span class="ok">Categorical variable</span></div></div>
+        <div class="field"><label><span>Nominal bar diameter d</span><em>Input feature</em></label><div class="row"><input id="d" type="number" value="12" step="0.1"><span class="unit">mm</span></div><div class="range"><span>Database range: 5.5–16.0</span><span id="dS" class="ok">Within range</span></div></div>
+        <div class="field"><label><span>Elastic modulus E<sub>f</sub></span><em>Input feature</em></label><div class="row"><input id="Ef" type="number" value="42.5" step="0.1"><span class="unit">GPa</span></div><div class="range"><span>Database range: 21.3–200</span><span id="EfS" class="ok">Within range</span></div></div>
+        <div class="field"><label><span>FRP tensile strength f<sub>fu</sub></span><em>Input feature</em></label><div class="row"><input id="ffu" type="number" value="1000" step="1"><span class="unit">MPa</span></div><div class="range"><span>Database range: 396–1801.6</span><span id="ffuS" class="ok">Within range</span></div></div>
+        <div class="field"><label><span>Rib height R<sub>h</sub></span><em>Used to calculate R<sub>h</sub>/d</em></label><div class="row"><input id="Rh" type="number" value="0.72" step="0.01"><span class="unit">mm</span></div><div class="range"><span>Database range: R<sub>h</sub>/d = 0.01–0.17</span><span id="RhS" class="ok">Within range</span></div></div>
+        <div class="field"><label><span>Rib spacing R<sub>s</sub></span><em>Used to calculate R<sub>s</sub>/d</em></label><div class="row"><input id="Rs" type="number" value="9.4" step="0.1"><span class="unit">mm</span></div><div class="range"><span>Database range: R<sub>s</sub>/d = 0.47–3.49</span><span id="RsS" class="ok">Within range</span></div></div>
+        <div class="field"><label><span>Rib width W<sub>r</sub></span><em>Preview parameter</em></label><div class="row"><input id="Wr" type="number" value="6.6" step="0.1"><span class="unit">mm</span></div><div class="range"><span>Used only for geometric visualisation</span><span>Not included in the 13-feature model</span></div></div>
+      </div>
+
+      <div class="preview">
+        <div class="previewtop"><b>Parametric FRP Bar Geometry Preview</b></div>
+        <svg id="frpSvg" viewBox="0 0 820 260" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="previewnote">
+          <span><b>Material: </b><span id="materialName">GFRP</span></span>
+          <span><b>Surface: </b><span id="surfaceName">Ribbed</span></span>
+          <span><b>Linked parameters: </b>d、R<sub>h</sub>、R<sub>s</sub>、W<sub>r</sub></span>
+          <span>Geometry shown to relative scale</span>
+        </div>
+      </div>
+
+      <div class="derived">
+        <div class="metric"><div class="k">R<sub>h</sub>/d</div><div class="v" id="rhd">0.060</div><div class="n">NormalisedRib height</div></div>
+        <div class="metric"><div class="k">R<sub>s</sub>/d</div><div class="v" id="rsd">0.783</div><div class="n">NormalisedRib spacing</div></div>
+        <div class="metric"><div class="k">A<sub>r</sub></div><div class="v" id="Ar">25.52</div><div class="n">mm²</div></div>
+        <div class="metric"><div class="k">a<sub>s</sub></div><div class="v" id="as">2.71</div><div class="n">mm</div></div>
+        <div class="metric"><div class="k">R<sub>r</sub></div><div class="v" id="Rr">0.072</div><div class="n">Dimensionless</div></div>
+      </div>
+      <div class="features"><div class="featuretitle">13-Feature Model Input Vector</div><div id="featuregrid" class="featuregrid"></div></div>
+    </div>
+  </article>
+</section>
+
+<aside class="stack">
+  <article class="card">
+    <div class="head"><div class="ttl"><div class="step">03</div><div><h2>Machine-Learning Model Selection</h2><p class="sub">Nine supervised-learning models can be selected independently, with the corresponding cross-validation metrics shown below.</p></div></div></div>
+    <div class="body">
+      <div class="models">
+        <button class="model active" data-model="CatBoost"><span class="best">Recommended</span><b>CatBoost</b><small>Categorical-feature aware · Best overall performance</small></button>
+        <button class="model" data-model="XGBoost"><b>XGBoost</b><small>Gradient boosting</small></button>
+        <button class="model" data-model="GBDT"><b>GBDT</b><small>Gradient boosting decision tree</small></button>
+        <button class="model" data-model="Random Forest"><b>Random Forest</b><small>Bagging ensemble</small></button>
+        <button class="model" data-model="BPNN"><b>BPNN</b><small>Back-propagation neural network</small></button>
+        <button class="model" data-model="SVR"><b>SVR</b><small>RBF-kernel regression</small></button>
+        <button class="model" data-model="AdaBoost"><b>AdaBoost</b><small>Adaptive boosting</small></button>
+        <button class="model" data-model="MLR"><b>MLR</b><small>Multiple linear regression</small></button>
+        <button class="model" data-model="LASSO"><b>LASSO</b><small>L1-regularised regression</small></button>
+      </div>
+      <div class="modelinfo">
+        <div><span>R²</span><b id="mR2">0.842</b></div>
+        <div><span>RMSE</span><b id="mRMSE">2.196 MPa</b></div>
+        <div><span>MAE</span><b id="mMAE">1.650 MPa</b></div>
+        <div><span>MAPE</span><b id="mMAPE">11.57%</b></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="head"><div class="ttl"><div class="step">04</div><div><h2>Feature-Domain Overview</h2><p class="sub">Locate the current inputs within the statistical ranges of the training database and identify potential extrapolation.</p></div></div></div>
+    <div class="body">
+      <div class="domain-summary">
+        <div><div class="lead">Continuous-feature range check</div><div class="desc">This check only indicates whether the inputs lie within the database ranges; it is not a measure of prediction confidence.</div></div>
+        <div class="domain-count"><b id="domainCount">11/11</b><span>continuous features within range</span></div>
+      </div>
+      <div id="domainRows"></div>
+      <div class="domain-foot">
+        <div class="miniinfo"><span>FRP type / surface</span><b id="combo">GFRP · Rb</b></div>
+        <div class="miniinfo"><span>13-feature input status</span><b id="vectorState">All inputs within range</b></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="head"><div class="ttl"><div class="step">05</div><div><h2>Bond-Strength Prediction</h2><p class="sub">Predict the ultimate bond strength, τ<sub>u</sub>, using the selected machine-learning model.</p></div></div></div>
+    <div class="body">
+      <div class="resultbox">
+        <div class="reshead"><div><div class="reslabel">Predicted ultimate bond strength τ<sub>u</sub></div><div id="pred" class="big">--<span>MPa</span></div></div><div id="predMode" class="modepill">Awaiting prediction</div></div>
+        <div class="resmeta">
+          <div><span>Selected model</span><b id="currentModel">CatBoost</b></div>
+          <div><span>Applicability domain</span><b id="domain">Within range</b></div>
+        </div>
+      </div>
+      <button id="run" class="run">Run Prediction</button>
+      <div class="actions"><button id="save" class="secondary">Export Result</button><button id="copy" class="secondary">Copy 13-Feature Input</button></div>
+      <div id="alert" class="alert"></div>
+    </div>
+  </article>
+</aside>
+</main>
+
+<div class="notice"><b>Note: </b>This tool is intended solely for theoretical analysis, research support and parametric comparison of FRP bar–concrete bond strength. Predictions are affected by the training-domain coverage, test configuration and data quality, and should not replace design codes, structural design checks, construction acceptance, safety assessment or professional engineering judgement. Inputs outside the database ranges constitute extrapolation and should be interpreted with caution.</div>
+<div class="footer"><span>© 2026 <strong>PhD Hong</strong>. All rights reserved.</span><span>Developed by <strong>Z Lab</strong>.</span></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let selected='CatBoost',info=null,last=null;
+
+const typePreset={
+  1:{name:'CFRP',base:'#e5d28b',dark:'#9a874a',light:'#fff2b8',edge:'#7d6f43',Ef:105.5,ffu:1801.6},
+  2:{name:'GFRP',base:'#d7dce2',dark:'#7f8a94',light:'#f5f7f9',edge:'#68737d',Ef:42.5,ffu:1000},
+  3:{name:'BFRP',base:'#555b61',dark:'#252a2e',light:'#8b9298',edge:'#161a1d',Ef:54,ffu:1437}
+};
+const surfaceText={1:'Helically wound',2:'Ribbed',3:'Indented'};
+const ranges={Rh_d:[.01,.17],Rs_d:[.47,3.49],d:[5.5,16],c_d:[1.25,13.13],lb_d:[4,7],Ar:[4.57,111.79],as:[.47,13.92],Rr:[.01,.28],Ef:[21.3,200],ffu:[396,1801.6],fc:[23.3,67.1]};
+const domainKeys=['fc','d','c_d','lb_d','Rh_d','Rs_d','Ar','as','Rr','Ef','ffu'];
+
+function f(x,n=3){return Number.isFinite(x)?x.toFixed(n):'--'}
+function inside(v,r){return v>=r[0]&&v<=r[1]}
+function val(id){return Number($(id).value)}
+function setS(id,ok){$(id).textContent=ok?'Within range':'Out of range';$(id).className=ok?'ok':'warn'}
+
+function calc(){
+  const fc=val('fc'),d=val('d'),c=val('cover'),lb=val('lb'),Rh=val('Rh'),Rs=val('Rs'),
+        Ef=val('Ef'),ffu=val('ffu'),Surface=val('surface'),Type=val('type');
+  const cd=c/d,lbd=lb/d,Rh_d=Rh/d,Rs_d=Rs/d,Ar=Math.PI*Rh*(d-Rh),as=Ar/Rs,Rr=Ar/(Math.PI*d*Rs);
+
+  $('cd').textContent=f(cd);$('lbd').textContent=f(lbd);$('rhd').textContent=f(Rh_d);$('rsd').textContent=f(Rs_d);
+  $('Ar').textContent=f(Ar,2);$('as').textContent=f(as,2);$('Rr').textContent=f(Rr);
+
+  setS('fcS',inside(fc,ranges.fc));setS('dS',inside(d,ranges.d));setS('cdS',inside(cd,ranges.c_d));
+  setS('lbdS',inside(lbd,ranges.lb_d));setS('RhS',inside(Rh_d,ranges.Rh_d));setS('RsS',inside(Rs_d,ranges.Rs_d));
+  setS('EfS',inside(Ef,ranges.Ef));setS('ffuS',inside(ffu,ranges.ffu));
+
+  const feat={Surface,Rh_d,Rs_d,d,c_d:cd,lb_d:lbd,Ar,as,Rr,Type,Ef,ffu,fc};
+  const bad=[];
+  $('featuregrid').innerHTML=Object.entries(feat).map(([k,v])=>{
+    const ok=!ranges[k]||inside(v,ranges[k]); if(!ok)bad.push(k);
+    return `<div class="chip ${ok?'':'bad'}"><span>${k}${ranges[k]?` · ${ranges[k][0]}–${ranges[k][1]}`:''}</span><b>${['Surface','Type'].includes(k)?v:f(v,3)}</b></div>`;
+  }).join('');
+
+  $('domain').textContent=bad.length?'Extrapolation':'Within range';
+  $('domain').className=bad.length?'error':'';
+  $('vectorState').textContent=bad.length?`${bad.length} feature(s) out of range`:'All inputs within range';
+  $('vectorState').style.color=bad.length?'#ad741d':'#26795d';
+
+  const p=typePreset[Type], sName=['HW','Rb','In'][Surface-1];
+  $('combo').textContent=`${p.name} · ${sName}`;
+  $('materialName').textContent=p.name;$('surfaceName').textContent=surfaceText[Surface];
+
+  updateDomainOverview(feat);
+  drawBar();
+  return{feat,bad}
+}
+
+function updateDomainOverview(feat){
+  const insideCount=domainKeys.filter(k=>inside(feat[k],ranges[k])).length;
+  $('domainCount').textContent=`${insideCount}/${domainKeys.length}`;
+  $('domainCount').style.color=insideCount===domainKeys.length?'#26795d':'#ad741d';
+
+  const show=[
+    ['fc','f_c',feat.fc,'MPa'],['d','d',feat.d,'mm'],['c_d','c/d',feat.c_d,''],
+    ['Rh_d','R_h/d',feat.Rh_d,''],['Rr','R_r',feat.Rr,'']
+  ];
+  $('domainRows').innerHTML=show.map(([key,label,v,unit])=>{
+    const r=ranges[key]; let pos=(v-r[0])/(r[1]-r[0])*100; pos=Math.max(0,Math.min(100,pos));
+    const ok=inside(v,r);
+    return `<div class="domain-row">
+      <div class="name">${label}</div>
+      <div class="track"><span class="dotpos" style="left:${pos}%;border-color:${ok?'#2f6f9e':'#ad741d'}"></span></div>
+      <div class="val">${f(v,key==='fc'||key==='d'?1:3)}${unit?' '+unit:''}</div>
+    </div>`;
+  }).join('');
+}
+
+function drawBar(){
+  const svg=$('frpSvg'),d=val('d'),Rh=val('Rh'),Rs=val('Rs'),Wr=val('Wr'),
+        T=val('type'),S=val('surface'),p=typePreset[T];
+
+  const x0=86,x1=742,cy=126,L=x1-x0;
+  const H=Math.max(52,Math.min(94,52+(d-5.5)*4.05));
+  const y=cy-H/2;
+  const ribRise=Math.max(4,Math.min(20,Rh/d*118));
+  const pitch=Math.max(32,Math.min(116,Rs/d*34+22));
+  const ribW=Math.max(7,Math.min(29,Wr/d*20+5));
+  const perspective=7;
+  let surface='';
+
+  if(S===1){
+    for(let x=x0-85;x<x1+70;x+=pitch){
+      surface += `
+        <path d="M ${x} ${y-ribRise*.38}
+                 C ${x+ribW*.35} ${y+5}, ${x+ribW*.9} ${y+H-5}, ${x+ribW+34} ${y+H+ribRise*.38}"
+              stroke="${p.edge}" stroke-width="${Math.max(6,ribRise*.46)}" fill="none"
+              stroke-linecap="round" opacity=".93"/>
+        <path d="M ${x+2} ${y-ribRise*.28}
+                 C ${x+ribW*.35+2} ${y+6}, ${x+ribW*.9+2} ${y+H-6}, ${x+ribW+36} ${y+H+ribRise*.28}"
+              stroke="${p.light}" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".58"/>`;
+    }
+  }else if(S===2){
+    for(let x=x0+8;x<x1-18;x+=pitch){
+      surface += `
+        <g>
+          <path d="M ${x} ${y+5}
+                   Q ${x+ribW*.46} ${y-ribRise} ${x+ribW} ${y+4}
+                   L ${x+ribW+perspective} ${y+H-4}
+                   Q ${x+ribW*.46+perspective} ${y+H+ribRise} ${x+perspective} ${y+H-5}
+                   Z"
+                fill="url(#ribG)" stroke="${p.edge}" stroke-width="1.5"/>
+          <path d="M ${x+3} ${y+5}
+                   Q ${x+ribW*.46} ${y-ribRise+3} ${x+ribW-2} ${y+5}"
+                stroke="${p.light}" stroke-width="1.35" fill="none" opacity=".72"/>
+          <path d="M ${x+perspective+2} ${y+H-6}
+                   Q ${x+ribW*.46+perspective} ${y+H+ribRise-3} ${x+ribW+perspective-2} ${y+H-6}"
+                stroke="${p.dark}" stroke-width="1.1" fill="none" opacity=".58"/>
+        </g>`;
+    }
+  }else{
+    for(let x=x0+24;x<x1-26;x+=pitch){
+      surface += `
+        <g opacity=".98">
+          <ellipse cx="${x}" cy="${cy}" rx="${Math.max(8,ribW*.74)}" ry="${Math.max(13,H*.31)}"
+                   fill="url(#grooveG)" stroke="${p.edge}" stroke-width="${Math.max(2.4,ribRise*.2)}"/>
+          <ellipse cx="${x-2}" cy="${cy-2}" rx="${Math.max(5.5,ribW*.5)}" ry="${Math.max(9,H*.22)}"
+                   fill="none" stroke="${p.light}" stroke-width="1" opacity=".34"/>
+        </g>`;
+    }
+  }
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${p.light}"/>
+        <stop offset=".10" stop-color="${p.base}"/>
+        <stop offset=".40" stop-color="${p.base}"/>
+        <stop offset=".68" stop-color="${p.dark}"/>
+        <stop offset=".86" stop-color="${p.base}"/>
+        <stop offset="1" stop-color="${p.edge}"/>
+      </linearGradient>
+      <linearGradient id="ribG" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="${p.light}"/>
+        <stop offset=".45" stop-color="${p.base}"/>
+        <stop offset="1" stop-color="${p.dark}"/>
+      </linearGradient>
+      <radialGradient id="grooveG" cx="42%" cy="40%" r="70%">
+        <stop offset="0" stop-color="${p.dark}"/>
+        <stop offset=".55" stop-color="${p.edge}"/>
+        <stop offset="1" stop-color="${p.base}"/>
+      </radialGradient>
+      <clipPath id="clipBody">
+        <rect x="${x0}" y="${y}" width="${L}" height="${H}" rx="${Math.min(14,H*.18)}"/>
+      </clipPath>
+      <filter id="barShadow" x="-20%" y="-45%" width="150%" height="200%">
+        <feDropShadow dx="0" dy="10" stdDeviation="7" flood-color="#243f52" flood-opacity=".16"/>
+      </filter>
+      <filter id="softBlur"><feGaussianBlur stdDeviation="5"/></filter>
+    </defs>
+
+    <ellipse cx="${(x0+x1)/2}" cy="${y+H+24}" rx="${L*.45}" ry="9"
+             fill="#8fa1ae" opacity=".12" filter="url(#softBlur)"/>
+
+    <g filter="url(#barShadow)">
+      <rect x="${x0}" y="${y}" width="${L}" height="${H}" rx="${Math.min(14,H*.18)}"
+            fill="url(#bodyG)" stroke="${p.edge}" stroke-width="1.8"/>
+      <path d="M ${x0+28} ${y+10} H ${x1-28}"
+            stroke="#ffffff" stroke-width="4.2" stroke-linecap="round" opacity=".22"/>
+      <path d="M ${x0+24} ${y+H-10} H ${x1-32}"
+            stroke="#101820" stroke-width="2" stroke-linecap="round" opacity=".075"/>
+      <g ${S===1?'clip-path="url(#clipBody)"':''}>${surface}</g>
+    </g>`;
+}
+
+async function loadInfo(){
+  try{info=await fetch('/api/info').then(r=>r.json());updateMetrics()}
+  catch(e){showAlert('The local model service is not running. Start the application using start_windows.bat.',true)}
+}
+function updateMetrics(){
+  if(!info)return;
+  const m=info.reported_metrics[selected];
+  $('mR2').textContent=m.R2.toFixed(3);$('mRMSE').textContent=m.RMSE.toFixed(3)+' MPa';
+  $('mMAE').textContent=m.MAE.toFixed(3)+' MPa';$('mMAPE').textContent=m.MAPE.toFixed(2)+'%';
+}
+function showAlert(text,force=false){
+  const el=$('alert');
+  if(!text&&!force){el.style.display='none';el.textContent='';return}
+  el.style.display='block';el.textContent=text;
+}
+async function predict(){
+  const c=calc();$('run').classList.add('loader');$('run').textContent='Calculating…';showAlert('');
+  try{
+    const r=await fetch('/api/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:selected,features:c.feat})});
+    const out=await r.json();if(!r.ok)throw new Error(out.error||'prediction failed');
+    last={...out,features:c.feat};
+    $('pred').innerHTML=`${out.prediction_MPa.toFixed(2)}<span>MPa</span>`;
+    $('predMode').textContent=out.is_extrapolation?'Extrapolated prediction':'Model output';
+    $('domain').textContent=out.is_extrapolation?'Extrapolation':'Within range';
+    if(out.is_extrapolation)showAlert(`Caution: ${out.out_of_domain.map(x=>x.feature).join(', ')} is/are outside the statistical range of the training database; this result is an extrapolated prediction.`);
+  }catch(e){showAlert('Prediction failed: '+e.message,true)}
+  finally{$('run').classList.remove('loader');$('run').textContent='Run Prediction'}
+}
+function selectModel(btn){
+  document.querySelectorAll('.model').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  selected=btn.dataset.model;$('currentModel').textContent=selected;$('predMode').textContent='Awaiting recalculation';updateMetrics();
+}
+document.querySelectorAll('.model').forEach(b=>b.onclick=()=>selectModel(b));
+['fc','cover','lb','d','Ef','ffu','Rh','Rs','Wr','surface'].forEach(id=>$(id).addEventListener('input',calc));
+$('type').addEventListener('change',()=>{const p=typePreset[val('type')];$('Ef').value=p.Ef;$('ffu').value=p.ffu;calc()});
+document.querySelectorAll('[data-lbd]').forEach(b=>b.onclick=()=>{$('lb').value=f(val('d')*Number(b.dataset.lbd),1);calc()});
+$('run').onclick=predict;
+$('save').onclick=()=>{
+  if(!last)return alert('Run a prediction first.');
+  const blob=new Blob([JSON.stringify({application:'FRP Bar–Concrete Bond Strength Prediction Platform',version:'1.0',...last},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='FRP_bond_prediction.json';a.click();URL.revokeObjectURL(a.href)
+};
+$('copy').onclick=()=>{
+  const {feat}=calc();navigator.clipboard.writeText(Object.entries(feat).map(([k,v])=>`${k}=${v}`).join(', ')).then(()=>{
+    $('copy').textContent='Copied';setTimeout(()=>$('copy').textContent='Copy 13-Feature Input',900)
+  })
+};
+calc();loadInfo();
+</script>
+</body>
+</html>

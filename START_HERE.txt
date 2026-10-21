@@ -1,0 +1,19 @@
+FRP Bar–Concrete Bond Strength Prediction Platform v1.0
+==========================================================
+
+Requirement: 64-bit Python 3.11.x on Windows 10/11.
+
+Start: double-click start_windows.bat
+
+Desktop: http://127.0.0.1:8765/
+
+Mobile: keep the PC and phone on the same Wi-Fi/LAN and use the mobile URL printed by the launcher, for example:
+http://192.168.x.x:8765/mobile
+
+Add to phone home screen:
+iPhone/iPad: Safari -> Share -> Add to Home Screen
+Android: Chrome -> menu -> Add to Home screen
+
+For a stable long-term phone shortcut, reserve a fixed LAN IP for the PC in the router/DHCP settings.
+
+The current mobile interface uses the PC as the local model server. The PC must remain powered on and start_windows.bat must remain running.
